@@ -14,6 +14,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_28_094951) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "follows", force: :cascade do |t|
+    t.bigint "follower_id"
+    t.bigint "followee_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["followee_id"], name: "index_follows_on_followee_id"
+    t.index ["follower_id"], name: "index_follows_on_follower_id"
+  end
+
   create_table "sleep_schedules", force: :cascade do |t|
     t.bigint "user_id"
     t.datetime "sleep_time", precision: nil, null: false
@@ -31,5 +40,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_28_094951) do
     t.index ["name"], name: "index_users_on_name", unique: true
   end
 
+  add_foreign_key "follows", "users", column: "followee_id"
+  add_foreign_key "follows", "users", column: "follower_id"
   add_foreign_key "sleep_schedules", "users"
 end
